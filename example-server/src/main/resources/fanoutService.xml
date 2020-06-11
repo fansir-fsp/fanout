@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+    <service name="HelloObj" port="18600">
+        <api>com.fans.fanout.example.HelloService</api>
+        <impl>com.fans.fanout.example.server.service.HelloServiceImpl</impl>
+    </service>
+</services>
