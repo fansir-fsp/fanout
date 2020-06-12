@@ -48,17 +48,17 @@ public class ReadableAcceptor implements Acceptor {
     }
 
     private void readRequestAndDoHandler(SelectorManager selectorManager, TCPSession tcpSession) throws Exception {
+        //加循环处理粘包
         while (true) {
             Coder coder = selectorManager.getMasterAdapter().getCoder();
             if (coder == null) {
                 throw new RuntimeException("协议初始化失败");
             }
             Request request = tcpSession.readRequest(coder);
-            //拆包粘包 或 数据解析完成
+            //拆包或数据解析完成
             if (request == null) {
                 break;
             }
-
             //串行监听读事件+解析流已完成操作，改线程池异步执行逻辑
             HandlerExecutor handlerExecutor = selectorManager.getMasterAdapter().getHandlerExecutor();
             handlerExecutor.executor(() -> {

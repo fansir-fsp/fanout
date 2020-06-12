@@ -142,14 +142,9 @@ public class TCPSession implements Session, Comparable {
                 break;
             }
             //socketChannel close的情况下，此处会抛异常
-            int writeResult = socketChannel.write(byteBuffer);
+            socketChannel.write(byteBuffer);
 
-            //TODO:打印写出channel信息
-            /*log.info("写完测试 localAddress:{} remoteAddress:{} isConnected:{}",
-                    socketChannel.getLocalAddress(), socketChannel.getRemoteAddress(), socketChannel.isConnected());
-            socketChannel.close();*/
-
-            if (writeResult == 0 && byteBuffer.remaining() > 0) {
+            if (byteBuffer.remaining() > 0) {
                 //缓冲区已满，保留该byteBuffer, 直到缓冲区有空间后再次触发
                 selectionKey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
                 reactor.getSelector().wakeup();
@@ -164,7 +159,7 @@ public class TCPSession implements Session, Comparable {
     public Request readRequest(Coder coder) {
         byte[] bytes = readReqOrRep();
         if (bytes == null) {
-            //粘包或拆包导致buffer非完整包
+            //拆包导致buffer非完整包
             return null;
         }
         Request request = coder.decodeRequest(bytes);
@@ -198,7 +193,7 @@ public class TCPSession implements Session, Comparable {
             return null;
         }
         if (size > tempBuffer.remaining()) {
-            //标记位长度超出
+            //标记位长度超出 - 拆包
             return null;
         }
 
