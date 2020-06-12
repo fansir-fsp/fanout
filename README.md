@@ -8,6 +8,6 @@ quick end：
 
 3.demo的使用方式，已经集成在maven module里了，直接pull下来跑example-server和example-client即可。（还没有系统测试，有明显的bug轻喷。。）
 
-4.目前只支持终端ip:port手打方式直连服务端。（还要啥自行车。。）
+4.目前只支持终端ip:port手打tcp长连接方式直连服务端。（还要啥自行车。。）
 当然，后续还会不断完善，毕竟好不容易传上来了(=ﾟωﾟ)ﾉ
 
