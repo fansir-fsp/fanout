@@ -34,6 +34,7 @@ public class TCPSessionManager {
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 log.info("TCPSession 开始过期清理");
+                log.info("session queue size:{}", sessionQueue.size());
                 long currentTimeMillis = System.currentTimeMillis();
                 int clearCount = 0;
                 while (true) {
