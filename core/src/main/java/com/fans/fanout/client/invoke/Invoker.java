@@ -35,7 +35,7 @@ public class Invoker<T> {
         }
 
         for (int i = 0; i < invokerConnectorNum; i++) {
-            connections.add(new Connection(ip, port, this));
+            connections.add(invokerContext.buildConnection(ip, port));
         }
     }
 

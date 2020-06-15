@@ -4,7 +4,6 @@ import com.fans.fanout.client.Client;
 import com.fans.fanout.client.EndPoints;
 import com.fans.fanout.client.ProxyFactory;
 import com.fans.fanout.client.config.ClientConfig;
-import com.fans.fanout.net.nio.SelectorManager;
 import com.fans.fanout.serialization.Coder;
 import com.fans.fanout.skeleton.AnatomySkeleton;
 import com.fans.fanout.support.exception.ExpStandard;
@@ -20,7 +19,7 @@ import java.util.concurrent.*;
  * @author ：fsp
  * @date ：2020/5/25 18:43
  */
-public class InvokerContext<T> {
+public abstract class InvokerContext<T> {
 
     private static final long TIME_EXPIRED_CLARE_INTERVAL = 1000 * 30;
     private static final long TIME_EXPIRED_EXIST_BORDER = 1000 * 30;
@@ -39,11 +38,6 @@ public class InvokerContext<T> {
 
     private final ClientConfig clientConfig;
 
-    /**
-     * service维度分片
-     */
-    private volatile SelectorManager selectorManager;
-
     private ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
 
     private Queue<InvokersExpired> expiredQueue = new LinkedBlockingQueue();
@@ -54,8 +48,6 @@ public class InvokerContext<T> {
         this.anatomySkeleton = new AnatomySkeleton(apiClass);
         this.coder = client.getClientConfig().getProtocolEnum().getCoder();
         this.clientConfig = client.getClientConfig();
-        this.selectorManager = new SelectorManager(this);
-        this.selectorManager.startup();
         this.handlerExecutor = client.getHandlerExecutor();
         initScheduleInvokerCleaner();
     }
@@ -79,10 +71,6 @@ public class InvokerContext<T> {
 
     public ClientConfig getClientConfig() {
         return this.clientConfig;
-    }
-
-    public SelectorManager getSelectorManager() {
-        return this.selectorManager;
     }
 
     public List<Invoker> getInvokerList() {
@@ -163,4 +151,13 @@ public class InvokerContext<T> {
     public AnatomySkeleton getAnatomySkeleton() {
         return anatomySkeleton;
     }
+
+    /**
+     * 上下文获取connection实例
+     *
+     * @param ip
+     * @param port
+     * @return
+     */
+    abstract public Connection buildConnection(String ip, Integer port);
 }

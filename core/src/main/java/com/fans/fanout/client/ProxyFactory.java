@@ -3,6 +3,7 @@ package com.fans.fanout.client;
 import com.fans.fanout.client.invoke.InvokerContext;
 import com.fans.fanout.client.loadBalance.LoadBalance;
 import com.fans.fanout.client.loadBalance.PollingLoadBalance;
+import com.fans.fanout.net.nio.client.NIOInvokerContext;
 
 import java.lang.reflect.Proxy;
 
@@ -21,7 +22,7 @@ public class ProxyFactory {
             throw new RuntimeException("终端列表为空");
         }
         //2.endPoints build invokerList
-        InvokerContext invokerContext = new InvokerContext(apiClass, client);
+        InvokerContext invokerContext = new NIOInvokerContext(apiClass, client);
         invokerContext.refresh(endPoints);
 
         //3.loadBalance reset
