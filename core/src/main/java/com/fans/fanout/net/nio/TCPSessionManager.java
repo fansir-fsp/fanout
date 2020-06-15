@@ -43,6 +43,7 @@ public class TCPSessionManager {
                     }
                     if (session.getLastOperationTime() + TIMEOUT_MILLISECOND <= currentTimeMillis) {
                         session.softClose();
+                        sessionQueue.poll();
                         clearCount++;
                     } else {
                         break;
