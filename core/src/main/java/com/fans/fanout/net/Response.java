@@ -1,6 +1,8 @@
 package com.fans.fanout.net;
 
 
+import java.util.Map;
+
 /**
  * @author ：fsp
  * @date ：2020/5/9 18:38
@@ -14,6 +16,8 @@ public abstract class Response {
     protected String msg;
 
     protected String ticketNO;
+
+    protected Map<String, Object> parameterInstanceMap;
 
     protected Object result;
 
@@ -34,10 +38,12 @@ public abstract class Response {
         this.ticketNO = ticketNO;
     }
 
-    public Response(int code, String msg, String ticketNO, Object result, Class resultType) {
+    public Response(int code, String msg, String ticketNO,
+                    Map<String, Object> parameterInstanceMap, Object result, Class resultType) {
         this.code = code;
         this.msg = msg;
         this.ticketNO = ticketNO;
+        this.parameterInstanceMap = parameterInstanceMap;
         this.result = result;
         this.resultType = resultType;
     }
@@ -61,6 +67,10 @@ public abstract class Response {
     public String getTicketNO() throws Exception {
         initial();
         return ticketNO;
+    }
+
+    public Map<String, Object> getParameterInstanceMap() {
+        return this.parameterInstanceMap;
     }
 
     public Object getResult() {

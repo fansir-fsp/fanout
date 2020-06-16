@@ -30,93 +30,102 @@ public class ClientMain {
     private static void groupInvoke(HelloService serviceProxy) {
 
         CyclicBarrier cyclicBarrier = new CyclicBarrier(10);
-
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test1");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 1));
+                System.out.println("return value:" + serviceProxy.hello(request, 1));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test2");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 2));
+                System.out.println("return value:" + serviceProxy.hello(request, 2));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test3");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 3));
+                System.out.println("return value:" + serviceProxy.hello(request, 3));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test4");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 4));
+                System.out.println("return value:" + serviceProxy.hello(request, 4));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test5");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 5));
+                System.out.println("return value:" + serviceProxy.hello(request, 5));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test6");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 6));
+                System.out.println("return value:" + serviceProxy.hello(request, 6));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test7");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 7));
+                System.out.println("return value:" + serviceProxy.hello(request, 7));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test8");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 8));
+                System.out.println("return value:" + serviceProxy.hello(request, 8));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test9");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 9));
+                System.out.println("return value:" + serviceProxy.hello(request, 9));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                HelloRequest request = new HelloRequest("test10");
+                HelloRequest request = new HelloRequest("test");
                 cyclicBarrier.await();
-                System.out.println(serviceProxy.hello(request, 10));
+                System.out.println("return value:" + serviceProxy.hello(request, 10));
+                System.out.println("after process name:" + request.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }

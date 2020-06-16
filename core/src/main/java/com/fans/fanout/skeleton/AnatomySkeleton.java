@@ -19,8 +19,9 @@ public class AnatomySkeleton {
 
     private Object implObj;
 
-    //只在初始化的时候put
-    Map<String, MethodWrapper> methodMap = new HashMap();
+    Map<String, MethodWrapper> implMethodMap = new HashMap();
+
+    Map<String, MethodWrapper> apiMethodMap = new HashMap();
 
     public AnatomySkeleton(Class apiClass) {
         this(apiClass, null);
@@ -38,19 +39,27 @@ public class AnatomySkeleton {
 
     public synchronized void init() {
         if (implObj != null) {
-            Method[] methods = implObj.getClass().getMethods();
-            Arrays.stream(methods).forEach(method -> {
-                Map parameterMap = new HashMap<String, Parameter>();
-                Map parameterIndexMap = new HashMap<String, Integer>();
-                Parameter[] parameters = method.getParameters();
-                for (int i = 0; i < parameters.length; i++) {
-                    String parameterName = parameters[i].getName();
-                    parameterMap.put(parameterName, parameters[i]);
-                    parameterIndexMap.put(parameterName, i);
-                }
-                methodMap.put(method.getName(), new MethodWrapper(method, parameterMap, parameterIndexMap));
-            });
+            implMethodMap = extractMethodWrapperMap(implObj.getClass().getMethods());
         }
+        if (apiClass != null) {
+            apiMethodMap = extractMethodWrapperMap(apiClass.getMethods());
+        }
+    }
+
+    public Map<String, MethodWrapper> extractMethodWrapperMap(Method[] methods) {
+        Map<String, MethodWrapper> methodMap = new HashMap();
+        Arrays.stream(methods).forEach(method -> {
+            Map parameterMap = new HashMap<String, Parameter>();
+            Map parameterIndexMap = new HashMap<String, Integer>();
+            Parameter[] parameters = method.getParameters();
+            for (int i = 0; i < parameters.length; i++) {
+                String parameterName = parameters[i].getName();
+                parameterMap.put(parameterName, parameters[i]);
+                parameterIndexMap.put(parameterName, i);
+            }
+            methodMap.put(method.getName(), new MethodWrapper(method, parameterMap, parameterIndexMap));
+        });
+        return methodMap;
     }
 
     public Class getApiClass() {
@@ -61,7 +70,11 @@ public class AnatomySkeleton {
         return implObj;
     }
 
-    public Map<String, MethodWrapper> getMethodMap() {
-        return methodMap;
+    public Map<String, MethodWrapper> getImplMethodMap() {
+        return implMethodMap;
+    }
+
+    public Map<String, MethodWrapper> getApiMethodMap() {
+        return apiMethodMap;
     }
 }

@@ -54,4 +54,7 @@ public class DynamicInvokeContext {
         return invokePattern;
     }
 
+    public Object[] getMethodArgs() {
+        return methodArgs;
+    }
 }

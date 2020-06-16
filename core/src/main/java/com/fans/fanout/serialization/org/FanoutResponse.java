@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.fans.fanout.net.Response;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
+
 /**
  * 建议序列化response实现：fastJson方式
  *
@@ -19,8 +21,9 @@ public class FanoutResponse extends Response {
         super(code, msg, ticketNO);
     }
 
-    public FanoutResponse(int code, String msg, String ticketNO, Object result, Class resultType) {
-        super(code, msg, ticketNO, result, resultType);
+    public FanoutResponse(int code, String msg, String ticketNO,
+                          Map<String, Object> parameterInstanceMap, Object result, Class resultType) {
+        super(code, msg, ticketNO, parameterInstanceMap, result, resultType);
     }
 
     @Override
@@ -28,6 +31,7 @@ public class FanoutResponse extends Response {
         FanoutAttr fanoutAttr = new FanoutAttr();
         fanoutAttr.code = this.code;
         fanoutAttr.msg = this.msg;
+        fanoutAttr.parameterInstanceMap = this.parameterInstanceMap;
         fanoutAttr.result = JSON.toJSONString(this.result);
         fanoutAttr.resultType = this.resultType.getName();
         fanoutAttr.ticket = this.ticketNO;
@@ -46,6 +50,7 @@ public class FanoutResponse extends Response {
         this.code = fanoutAttr.code;
         this.msg = fanoutAttr.msg;
         this.ticketNO = fanoutAttr.ticket;
+        this.parameterInstanceMap = fanoutAttr.parameterInstanceMap;
         this.resultType = Class.forName(fanoutAttr.resultType);
         //非void解析返回值
         if (!Void.class.isAssignableFrom(this.resultType)) {
@@ -63,6 +68,8 @@ public class FanoutResponse extends Response {
         private String resultType;
 
         private String ticket;
+
+        private Map<String, Object> parameterInstanceMap;
 
         public Integer getCode() {
             return code;
@@ -102,6 +109,14 @@ public class FanoutResponse extends Response {
 
         public void setTicket(String ticket) {
             this.ticket = ticket;
+        }
+
+        public Map<String, Object> getParameterInstanceMap() {
+            return parameterInstanceMap;
+        }
+
+        public void setParameterInstanceMap(Map<String, Object> parameterInstanceMap) {
+            this.parameterInstanceMap = parameterInstanceMap;
         }
     }
 }

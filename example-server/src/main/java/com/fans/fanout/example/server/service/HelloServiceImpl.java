@@ -12,6 +12,7 @@ public class HelloServiceImpl implements HelloService {
     public Integer hello(HelloRequest rep, Integer age) {
         System.out.println("name:" + rep.getName());
         System.out.println("age:" + age);
+        rep.setName(rep.getName() + age);
         return age + 80;
     }
 }

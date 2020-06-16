@@ -42,7 +42,7 @@ public class RequestHandler {
             reqTicketNO = request.getTicketNO();
             String reqResultType = request.getResultType();
 
-            MethodWrapper methodWrapper = serviceSkeleton.getAnatomySkeleton().getMethodMap().get(reqMethodName);
+            MethodWrapper methodWrapper = serviceSkeleton.getAnatomySkeleton().getImplMethodMap().get(reqMethodName);
             if (methodWrapper == null) {
                 //TODO:此处可以细分回包时的错误类型
                 throw new RuntimeException("远程方法不存在");
@@ -86,7 +86,7 @@ public class RequestHandler {
                     .invoke(serviceSkeleton.getAnatomySkeleton().getImplObj(), invokeParameters);
 
             //Response回包 - 目前回包类型未作校验，依赖客户端校验
-            return coder.getResponses().successResponse(reqTicketNO, result, Class.forName(reqResultType));
+            return coder.getResponses().successResponse(reqTicketNO, reqParameterInstanceMap, result, Class.forName(reqResultType));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("解包失败，以系统异常回包 req:{}", request);

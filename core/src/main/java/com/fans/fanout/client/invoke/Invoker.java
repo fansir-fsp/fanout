@@ -7,11 +7,14 @@ import com.fans.fanout.net.Request;
 import com.fans.fanout.net.Response;
 import com.fans.fanout.net.enums.NetEnums;
 import com.fans.fanout.serialization.Coder;
+import com.fans.fanout.skeleton.MethodWrapper;
+import com.fans.fanout.support.bean.BeanAccessor;
 import com.fans.fanout.support.exception.ExpStandard;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -87,6 +90,27 @@ public class Invoker<T> {
                     MessageFormat.format("invoke fail, response code is fail, code:{0}, msg:{1}",
                             response.getCode(), response.getMsg()));
         }
+
+        //形参赋值
+        refreshRemoteParameter(dynamicInvokeContext, response);
         return response.getResult();
+    }
+
+    private void refreshRemoteParameter(DynamicInvokeContext dynamicInvokeContext, Response response) {
+        Map<String, Object> parameterInstanceMap = response.getParameterInstanceMap();
+        Map<String, MethodWrapper> methodMap = invokerContext.getAnatomySkeleton().getApiMethodMap();
+        Map<String, Integer> parameterIndexMap = methodMap.get(dynamicInvokeContext.getMethodName()).getParameterIndexMap();
+
+        Object[] methodArgs = dynamicInvokeContext.getMethodArgs();
+        parameterInstanceMap.forEach((key, value) -> {
+            Integer index = parameterIndexMap.get(key);
+            if (index != null) {
+                //methodArgs[index] = value;
+                //操作数组地址指向
+                BeanAccessor.setObject(methodArgs, index, value);
+            }
+        });
+
+        System.out.println("methodArgs");
     }
 }
