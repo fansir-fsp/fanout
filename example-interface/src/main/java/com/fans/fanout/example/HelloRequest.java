@@ -1,5 +1,7 @@
 package com.fans.fanout.example;
 
+import com.fans.fanout.skeleton.annotation.HolderField;
+
 /**
  * @author ：fsp
  * @date ：2020/4/17 17:49
@@ -7,6 +9,7 @@ package com.fans.fanout.example;
  */
 public class HelloRequest {
 
+    @HolderField
     private String name;
 
     public HelloRequest(String name) {

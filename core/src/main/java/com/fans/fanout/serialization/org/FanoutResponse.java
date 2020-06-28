@@ -2,8 +2,12 @@ package com.fans.fanout.serialization.org;
 
 import com.alibaba.fastjson.JSON;
 import com.fans.fanout.net.Response;
+import com.fans.fanout.support.exception.ExpConsumer;
+import com.fans.fanout.support.exception.ExpStandard;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +35,16 @@ public class FanoutResponse extends Response {
         FanoutAttr fanoutAttr = new FanoutAttr();
         fanoutAttr.code = this.code;
         fanoutAttr.msg = this.msg;
-        fanoutAttr.parameterInstanceMap = this.parameterInstanceMap;
+
+        Map<String, String> parameterTypeMap = new HashMap();
+        Map<String, String> parameterInstanceMap = new HashMap();
+        this.parameterInstanceMap.forEach((key, value) -> {
+            parameterTypeMap.put(key, value.getClass().getName());
+            parameterInstanceMap.put(key, JSON.toJSONString(value));
+        });
+        fanoutAttr.parameterTypeMap = parameterTypeMap;
+        fanoutAttr.parameterInstanceMap = parameterInstanceMap;
+
         fanoutAttr.result = JSON.toJSONString(this.result);
         fanoutAttr.resultType = this.resultType.getName();
         fanoutAttr.ticket = this.ticketNO;
@@ -50,7 +63,22 @@ public class FanoutResponse extends Response {
         this.code = fanoutAttr.code;
         this.msg = fanoutAttr.msg;
         this.ticketNO = fanoutAttr.ticket;
-        this.parameterInstanceMap = fanoutAttr.parameterInstanceMap;
+
+        Map<String, String> parameterTypeMap =
+                fanoutAttr.parameterTypeMap != null ? fanoutAttr.parameterTypeMap : new HashMap();
+        Map<String, String> parameterInstanceOrgMap =
+                fanoutAttr.parameterInstanceMap != null ? fanoutAttr.parameterInstanceMap : new HashMap();
+        Map<String, Object> parameterInstanceMap = new HashMap();
+
+        ExpConsumer<Map.Entry<String, String>> expConsumer = entry -> {
+            String key = entry.getKey();
+            String parameterType = entry.getValue();
+            String parameterInstanceStr = parameterInstanceOrgMap.get(key);
+            parameterInstanceMap.put(key, JSON.parseObject(parameterInstanceStr, Class.forName(parameterType)));
+        };
+        ExpStandard.wrapAndCheckIteratorConsumer(new ArrayList(parameterTypeMap.entrySet()), expConsumer);
+        this.parameterInstanceMap = parameterInstanceMap;
+
         this.resultType = Class.forName(fanoutAttr.resultType);
         //非void解析返回值
         if (!Void.class.isAssignableFrom(this.resultType)) {
@@ -69,7 +97,9 @@ public class FanoutResponse extends Response {
 
         private String ticket;
 
-        private Map<String, Object> parameterInstanceMap;
+        private Map<String, String> parameterInstanceMap;
+
+        private Map<String, String> parameterTypeMap;
 
         public Integer getCode() {
             return code;
@@ -111,12 +141,20 @@ public class FanoutResponse extends Response {
             this.ticket = ticket;
         }
 
-        public Map<String, Object> getParameterInstanceMap() {
+        public Map<String, String> getParameterInstanceMap() {
             return parameterInstanceMap;
         }
 
-        public void setParameterInstanceMap(Map<String, Object> parameterInstanceMap) {
+        public void setParameterInstanceMap(Map<String, String> parameterInstanceMap) {
             this.parameterInstanceMap = parameterInstanceMap;
+        }
+
+        public Map<String, String> getParameterTypeMap() {
+            return parameterTypeMap;
+        }
+
+        public void setParameterTypeMap(Map<String, String> parameterTypeMap) {
+            this.parameterTypeMap = parameterTypeMap;
         }
     }
 }

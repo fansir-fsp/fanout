@@ -47,9 +47,9 @@ public class FanoutRequest extends Request {
             String parameterInstanceStr = parameterInstanceOrgMap.get(key);
             parameterInstanceMap.put(key, JSON.parseObject(parameterInstanceStr, Class.forName(parameterType)));
         };
-
         ExpStandard.wrapAndCheckIteratorConsumer(new ArrayList(parameterTypeMap.entrySet()), expConsumer);
         this.parameterInstanceMap = parameterInstanceMap;
+
         this.methodName = fanoutAttr.methodName;
         this.ticketNO = fanoutAttr.ticketNO;
         this.resultType = fanoutAttr.resultType;
