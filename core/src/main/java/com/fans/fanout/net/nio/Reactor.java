@@ -90,6 +90,7 @@ public class Reactor extends Thread {
                     reactorNo, channel, op, tcpSession);
 
             if (tcpSession != null) {
+                //核心：channel 注册 selector
                 SelectionKey key = channel.register(selector, op, tcpSession);
                 tcpSession.setSelectionKey(key);
                 tcpSession.setReactor(this);
